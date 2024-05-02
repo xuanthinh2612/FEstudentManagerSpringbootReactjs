@@ -16,7 +16,7 @@ export const post = async (path, payload = {}) => {
     return responeData.data;
 };
 export const updateRequest = async (path, payload = {}) => {
-    const responeData = await request.post(path, payload);
+    const responeData = await request.put(path, payload);
     return responeData.data;
 };
 export const deleteRequest = async (path, payload = {}) => {

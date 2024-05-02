@@ -1,36 +1,25 @@
-import { useEffect, useMemo, useState } from 'react';
-import * as studentService from '../service/studentService';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { pencel, trash, plus } from '../assets/icons';
 import configs from '../configs';
 import ConfirmModal from './ConfirmModal';
 import store from '../store';
-import { getListStudentAction } from '../actions/studentActions';
+import { getListStudentAction, deleteStudentByIdAction } from '../actions/studentActions';
 import { connect } from 'react-redux';
 
-function StudentList() {
+function StudentList(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
         store.dispatch(getListStudentAction());
     }, []);
 
-    console.log(store.getState().studentReducer);
-
     const handleEdit = (studentId) => {
         navigate(`/edit-student/${studentId}`);
     };
 
-    console.log();
-    const handleDelete = (studentId) => {
-        // const fetchApi = async () => {
-        //     const result = await studentService.deleteStudentById(studentId);
-        //     if (result) {
-        //         const newStudentList = studentList.filter((student) => student.id !== studentId);
-        //         setStudentList(newStudentList);
-        //     }
-        // };
-        // fetchApi();
+    const handleDelete = async (studentId) => {
+        await store.dispatch(deleteStudentByIdAction(studentId));
     };
 
     return (
@@ -56,32 +45,39 @@ function StudentList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {store.getState().studentReducer.list &&
-                        store.getState().studentReducer.list.map((student) => {
-                            return (
-                                <tr key={student.id}>
-                                    <th scope="row">{student.id}</th>
-                                    <td>
-                                        <Link
-                                            className="text-decoration-none"
-                                            to={`/student-detail/${student.id}`}
-                                        >{`${student.firstName} ${student.lastName}`}</Link>
-                                    </td>
-                                    <td>{`${student.email}`}</td>
-                                    <td>{student.age}</td>
-                                    <td>{student.address}</td>
-                                    <td>{student.schoolClass && student.schoolClass.name}</td>
-                                    <td>
-                                        <ConfirmModal callback={handleEdit} id={student.id}>
-                                            <span className="text-success m-2">{pencel}</span>
-                                        </ConfirmModal>
-                                        <ConfirmModal callback={handleDelete} id={student.id}>
-                                            <span className="text-danger m-2">{trash}</span>
-                                        </ConfirmModal>
-                                    </td>
-                                </tr>
-                            );
-                        })}
+                    {props.listStudent.length > 0 ? (
+                        <>
+                            {props.listStudent.map((student) => {
+                                return (
+                                    <tr key={student.id}>
+                                        <th scope="row">{student.id}</th>
+                                        <td>
+                                            <Link
+                                                className="text-decoration-none"
+                                                to={`/student-detail/${student.id}`}
+                                            >{`${student.firstName} ${student.lastName}`}</Link>
+                                        </td>
+                                        <td>{`${student.email}`}</td>
+                                        <td>{student.age}</td>
+                                        <td>{student.address}</td>
+                                        <td>{student.schoolClass && student.schoolClass.name}</td>
+                                        <td>
+                                            <ConfirmModal callback={handleEdit} id={student.id}>
+                                                <span className="text-success m-2">{pencel}</span>
+                                            </ConfirmModal>
+                                            <ConfirmModal callback={handleDelete} id={student.id}>
+                                                <span className="text-danger m-2">{trash}</span>
+                                            </ConfirmModal>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </>
+                    ) : (
+                        <tr className="text-center">
+                            <td colSpan={7}>No Data To Show.</td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </div>
@@ -90,7 +86,7 @@ function StudentList() {
 
 const mapStateToProps = (state) => {
     return {
-        students: state.studentReducer.list,
+        listStudent: state.studentReducer.list,
     };
 };
 

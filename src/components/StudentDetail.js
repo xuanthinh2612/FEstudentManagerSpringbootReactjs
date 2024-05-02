@@ -6,12 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import ConfirmModal from './ConfirmModal';
 import configs from '../configs';
 import store from '../store';
-import { getDetailStudentAction } from '../actions/studentActions';
+import { getDetailStudentAction, deleteStudentByIdAction } from '../actions/studentActions';
 import { connect } from 'react-redux';
 // import { getListStudentAction } from '../actions/studentActions';
-// import { connect } from 'react-redux';
 
-function StudentDetail() {
+function StudentDetail(props) {
     const navigate = useNavigate();
     const { id } = useParams();
 
@@ -20,16 +19,10 @@ function StudentDetail() {
     }, [id]);
 
     const handleEdit = (studentId) => {
-        // navigate(`/edit-student/${studentId}`);
+        navigate(`/edit-student/${studentId}`);
     };
-    const handleDelete = (studentId) => {
-        // const fetchApi = async () => {
-        //     const result = await studentService.deleteStudentById(studentId);
-        //     if (result) {
-        //         navigate(configs.routes.studentList);
-        //     }
-        // };
-        // fetchApi();
+    const handleDelete = async (studentId) => {
+        await store.dispatch(deleteStudentByIdAction(studentId));
     };
 
     return (
@@ -53,28 +46,29 @@ function StudentDetail() {
                     </tr>
                 </thead>
                 <tbody>
-                    {store.getState().studentReducer.item && (
+                    {props.student ? (
                         <tr>
-                            <th scope="row">{store.getState().studentReducer.item.id}</th>
+                            <th scope="row">{props.student.id}</th>
                             <td>
-                                {store.getState().studentReducer.item.firstName}
-                                {store.getState().studentReducer.item.lastName}
+                                {props.student.firstName}
+                                {props.student.lastName}
                             </td>
-                            <td>{`${store.getState().studentReducer.item.email}`}</td>
-                            <td>{store.getState().studentReducer.item.age}</td>
-                            <td>{store.getState().studentReducer.item.address}</td>
+                            <td>{`${props.student.email}`}</td>
+                            <td>{props.student.age}</td>
+                            <td>{props.student.address}</td>
+                            <td>{props.student.schoolClass && props.student.schoolClass.name}</td>
                             <td>
-                                {store.getState().studentReducer.item.schoolClass &&
-                                    store.getState().studentReducer.item.schoolClass.name}
-                            </td>
-                            <td>
-                                <ConfirmModal callback={handleEdit} id={store.getState().studentReducer.item.id}>
+                                <ConfirmModal callback={handleEdit} id={props.student.id}>
                                     <span className="text-success m-2">{pencel}</span>
                                 </ConfirmModal>
-                                <ConfirmModal callback={handleDelete} id={store.getState().studentReducer.item.id}>
+                                <ConfirmModal callback={handleDelete} id={props.student.id}>
                                     <span className="text-danger m-2">{trash}</span>
                                 </ConfirmModal>
                             </td>
+                        </tr>
+                    ) : (
+                        <tr className="text-center">
+                            <td colSpan={7}>No Data To Show.</td>
                         </tr>
                     )}
                 </tbody>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getClassList } from '../service/classService';
-import { getDetailStudentAction, createStudentAction } from '../actions/studentActions';
+import { getDetailStudentAction, updateStudentAction } from '../actions/studentActions';
 import { useNavigate, useParams } from 'react-router-dom';
 import configs from '../configs';
 import ConfirmModal from './ConfirmModal';
@@ -97,10 +97,9 @@ function StudentEditForm() {
         setStudentState(newStudentState);
     };
 
-    const onSubmit = () => {
-        store.dispatch(createStudentAction(studentState));
-
-        navigate(configs.routes.studentList);
+    const onSubmit = async () => {
+        await store.dispatch(updateStudentAction(studentState));
+        navigate(-1);
     };
 
     const cancelCreateStudent = () => {

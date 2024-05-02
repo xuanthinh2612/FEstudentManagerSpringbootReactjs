@@ -9,6 +9,14 @@ export const createStudentAction = (studentPayload) => async (dispatch) => {
     });
 };
 
+export const updateStudentAction = (studentPayload) => async (dispatch) => {
+    const res = await studentService.updateStudent(studentPayload);
+    dispatch({
+        type: UPDATE_STUDENT,
+        payload: res,
+    });
+};
+
 // return list student
 export const getListStudentAction = () => async (dispatch) => {
     const res = await studentService.getListStudent();
@@ -25,5 +33,15 @@ export const getDetailStudentAction = (id) => async (dispatch) => {
     dispatch({
         type: DETAIL_STUDENTS,
         payload: res,
+    });
+};
+
+// return student object
+export const deleteStudentByIdAction = (id) => async (dispatch) => {
+    await studentService.deleteStudentById(id);
+
+    dispatch({
+        type: DELETE_STUDENT,
+        payload: id,
     });
 };

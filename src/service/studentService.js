@@ -22,7 +22,7 @@ export const createStudent = async (studentPayload) => {
 
 export const updateStudent = async (studentPayload) => {
     try {
-        const res = await httpRequest.updateRequest('/student/create', studentPayload);
+        const res = await httpRequest.post('/student/update', studentPayload);
         return res;
     } catch (error) {
         // xu ly neu xay ra loi sau

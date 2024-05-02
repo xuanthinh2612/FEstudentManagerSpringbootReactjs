@@ -9,6 +9,7 @@ function ConfirmModal({ callback, id, children }) {
     const handleShow = () => setShow(true);
     const handleOk = () => {
         callback(id);
+        setShow(false);
     };
 
     return (

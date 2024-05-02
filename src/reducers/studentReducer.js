@@ -22,7 +22,7 @@ function studentReducer(studentState = initStudentStatate, action) {
                 list: updatedList,
                 item: payload,
             };
-        //
+
         case GET_LIST_STUDENT:
             return { ...studentState, list: payload };
         case DETAIL_STUDENTS:
@@ -30,7 +30,15 @@ function studentReducer(studentState = initStudentStatate, action) {
                 ...studentState,
                 item: payload,
             };
-        //
+        case DELETE_STUDENT:
+            const subList = studentState.list.filter((item) => item.id !== payload);
+
+            return {
+                ...studentState,
+                list: subList,
+                item: null,
+            };
+
         default:
             return studentState;
     }
