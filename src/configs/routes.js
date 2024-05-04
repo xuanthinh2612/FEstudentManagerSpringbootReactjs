@@ -2,12 +2,12 @@ const routes = {
     home: '/',
     studentList: '/students',
     classList: '/classes',
-    classDetail: '/class-detail',
+    classDetail: '/class-detail/:id',
     studentDetail: '/student-detail/:id',
     newStudent: '/new-student',
     newClass: '/new-class',
     editStudent: '/edit-student/:id',
-    editClass: '/edit-student',
+    editClass: '/edit-class/:id',
 };
 
 export default routes;
