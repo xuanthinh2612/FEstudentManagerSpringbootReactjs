@@ -4,6 +4,8 @@ import { createStudent } from '../service/studentService';
 import { useNavigate } from 'react-router-dom';
 import configs from '../configs';
 import ConfirmModal from './ConfirmModal';
+import store from '../store';
+import { createStudentAction } from '../actions/studentActions';
 
 function NewStudentForm() {
     let initStudentValue = {
@@ -77,14 +79,9 @@ function NewStudentForm() {
         setStudentSate(newStudentState);
     };
 
-    const onSubmit = (studentForCreate) => {
-        const fetchData = async () => {
-            const createdStudent = await createStudent(studentForCreate);
-            if (createdStudent) {
-                navigate(configs.routes.studentList);
-            }
-        };
-        fetchData();
+    const onSubmit = async (studentForCreate) => {
+        await store.dispatch(createStudentAction(studentForCreate));
+        navigate(configs.routes.studentList);
     };
 
     const cancelCreateStudent = () => {
@@ -173,7 +170,7 @@ function NewStudentForm() {
                     </div>
                     <div className="col-7">
                         <div className="d-flex mt-3 ">
-                            <ConfirmModal callback={onSubmit} id={studentState}>
+                            <ConfirmModal callback={onSubmit} param={studentState}>
                                 <button className="btn btn-outline-success mx-2" type="button">
                                     Create Student
                                 </button>

@@ -2,13 +2,13 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-function ConfirmModal({ callback, id, children }) {
+function ConfirmModal({ callback, param, children }) {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const handleOk = () => {
-        callback(id);
+        callback(param);
         setShow(false);
     };
 

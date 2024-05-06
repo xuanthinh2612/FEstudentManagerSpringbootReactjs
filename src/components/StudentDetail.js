@@ -58,10 +58,10 @@ function StudentDetail(props) {
                             <td>{props.student.address}</td>
                             <td>{props.student.schoolClass && props.student.schoolClass.name}</td>
                             <td>
-                                <ConfirmModal callback={handleEdit} id={props.student.id}>
+                                <ConfirmModal callback={handleEdit} param={props.student.id}>
                                     <span className="text-success m-2">{pencel}</span>
                                 </ConfirmModal>
-                                <ConfirmModal callback={handleDelete} id={props.student.id}>
+                                <ConfirmModal callback={handleDelete} param={props.student.id}>
                                     <span className="text-danger m-2">{trash}</span>
                                 </ConfirmModal>
                             </td>

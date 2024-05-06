@@ -7,6 +7,13 @@ function studentReducer(studentState = initStudentStatate, action) {
 
     switch (type) {
         case CREATE_STUDENT:
+            studentState.list.push(payload);
+
+            return {
+                ...studentState,
+                item: payload,
+            };
+        case UPDATE_STUDENT:
             let updatedList;
 
             const index = studentState.list.findIndex((item) => item.id === payload.id);

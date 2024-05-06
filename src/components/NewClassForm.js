@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ConfirmModal from './ConfirmModal';
+import store from '../store';
+import { createClassAction } from '../actions/classActions';
 
 function NewClassForm() {
-    const [className, setClassName] = useState();
-    const [description, setDescription] = useState();
-    const classObject = {};
+    const [className, setClassName] = useState('');
+    const [description, setDescription] = useState('');
+
+    const newClass = {
+        name: className,
+        description: description,
+    };
+
     const navigate = useNavigate();
 
     const handleChangeClassName = (classNameInput) => {
@@ -16,7 +23,11 @@ function NewClassForm() {
         setDescription(descriptionInput);
     };
 
-    const onSubmit = () => {};
+    const onSubmit = async (newClassParam) => {
+        await store.dispatch(createClassAction(newClassParam));
+        navigate('/classes');
+    };
+
     const cancelAction = () => {
         navigate(-1);
     };
@@ -48,7 +59,7 @@ function NewClassForm() {
 
                     <div className="col-7">
                         <div className="d-flex mt-3 ">
-                            <ConfirmModal callback={onSubmit} id={classObject}>
+                            <ConfirmModal callback={onSubmit} param={newClass}>
                                 <button className="btn btn-outline-success mx-2" type="button">
                                     Create Class
                                 </button>

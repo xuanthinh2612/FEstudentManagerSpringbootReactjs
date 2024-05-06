@@ -99,7 +99,7 @@ function StudentEditForm() {
 
     const onSubmit = async () => {
         await store.dispatch(updateStudentAction(studentState));
-        navigate(-1);
+        navigate(configs.routes.studentList);
     };
 
     const cancelCreateStudent = () => {
@@ -192,7 +192,7 @@ function StudentEditForm() {
                             </div>
                             <div className="col-7">
                                 <div className="d-flex mt-3 ">
-                                    <ConfirmModal callback={onSubmit} id={studentState}>
+                                    <ConfirmModal callback={onSubmit} param={studentState}>
                                         <button className="btn btn-outline-success" type="button">
                                             Update Student
                                         </button>

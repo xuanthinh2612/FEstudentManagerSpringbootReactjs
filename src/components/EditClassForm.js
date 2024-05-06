@@ -1,11 +1,18 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import ConfirmModal from './ConfirmModal';
+import store from '../store';
+import { getDetailClassAction, updateClassAction } from '../actions/classActions';
 
 function EditClassForm() {
-    const [className, setClassName] = useState();
-    const [description, setDescription] = useState();
-    const classObject = {};
+    const [className, setClassName] = useState('');
+    const [description, setDescription] = useState('');
+    const { id } = useParams();
+    const updatedClass = {
+        id,
+        name: className,
+        description,
+    };
     const navigate = useNavigate();
 
     const handleChangeClassName = (classNameInput) => {
@@ -16,7 +23,28 @@ function EditClassForm() {
         setDescription(descriptionInput);
     };
 
-    const onSubmit = () => {};
+    useEffect(() => {
+        store.dispatch(getDetailClassAction(id));
+
+        // Subscribe to Redux store changes and update component state accordingly
+        const unsubscribe = store.subscribe(() => {
+            const classState = store.getState().classReducer.item;
+            if (classState) {
+                setClassName(classState.name);
+                setDescription(classState.description);
+            }
+        });
+
+        // Clean-up function to unsubscribe from store changes when component unmounts
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
+    const onSubmit = (classObject) => {
+        store.dispatch(updateClassAction(classObject));
+        navigate('/classes');
+    };
     const cancelAction = () => {
         navigate(-1);
     };
@@ -48,7 +76,7 @@ function EditClassForm() {
 
                     <div className="col-7">
                         <div className="d-flex mt-3 ">
-                            <ConfirmModal callback={onSubmit} id={classObject}>
+                            <ConfirmModal callback={onSubmit} param={updatedClass}>
                                 <button className="btn btn-outline-success mx-2" type="button">
                                     Create Class
                                 </button>

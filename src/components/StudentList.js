@@ -45,7 +45,7 @@ function StudentList(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.listStudent.length > 0 ? (
+                    {props.listStudent && props.listStudent.length > 0 ? (
                         <>
                             {props.listStudent.map((student) => {
                                 return (
@@ -62,10 +62,10 @@ function StudentList(props) {
                                         <td>{student.address}</td>
                                         <td>{student.schoolClass && student.schoolClass.name}</td>
                                         <td>
-                                            <ConfirmModal callback={handleEdit} id={student.id}>
+                                            <ConfirmModal callback={handleEdit} param={student.id}>
                                                 <span className="text-success m-2">{pencel}</span>
                                             </ConfirmModal>
-                                            <ConfirmModal callback={handleDelete} id={student.id}>
+                                            <ConfirmModal callback={handleDelete} param={student.id}>
                                                 <span className="text-danger m-2">{trash}</span>
                                             </ConfirmModal>
                                         </td>

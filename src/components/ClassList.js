@@ -5,25 +5,24 @@ import { Link } from 'react-router-dom';
 import configs from '../configs';
 import { pencel, plus, trash } from '../assets/icons';
 import ConfirmModal from './ConfirmModal';
+import store from '../store';
+import { deleteClassAction, getListClassAction } from '../actions/classActions';
+import { connect } from 'react-redux';
 
-function ClassList() {
-    const [classListState, setClassList] = useState([]);
+function ClassList(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getListData = async () => {
-            const res = await classService.getClassList();
-            setClassList(res);
-        };
-
-        getListData();
+        store.dispatch(getListClassAction());
     }, []);
 
     const handleEdit = (classId) => {
         navigate(`/edit-class/${classId}`);
     };
 
-    const handleDelete = () => {};
+    const handleDelete = async (classId) => {
+        await store.dispatch(deleteClassAction(classId));
+    };
 
     return (
         <div className="container">
@@ -46,31 +45,38 @@ function ClassList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {classListState.map((classElement) => {
-                        return (
-                            <tr key={classElement.id}>
-                                <th scope="row">{classElement.id}</th>
-                                <td>
-                                    <Link className="text-decoration-none" to={`/class-detail/${classElement.id}`}>
-                                        {classElement.name}
-                                    </Link>{' '}
-                                </td>
-                                <td>{classElement.description}</td>
-                                <td>
-                                    <ConfirmModal callback={handleEdit} id={classElement.id}>
-                                        <span className="text-success m-2">{pencel}</span>
-                                    </ConfirmModal>
-                                    <ConfirmModal callback={handleDelete} id={handleEdit.id}>
-                                        <span className="text-danger m-2">{trash}</span>
-                                    </ConfirmModal>
-                                </td>
-                            </tr>
-                        );
-                    })}
+                    {props.listClass &&
+                        props.listClass.map((classElement) => {
+                            return (
+                                <tr key={classElement.id}>
+                                    <th scope="row">{classElement.id}</th>
+                                    <td>
+                                        <Link className="text-decoration-none" to={`/class-detail/${classElement.id}`}>
+                                            {classElement.name}
+                                        </Link>{' '}
+                                    </td>
+                                    <td>{classElement.description}</td>
+                                    <td>
+                                        <ConfirmModal callback={handleEdit} param={classElement.id}>
+                                            <span className="text-success m-2">{pencel}</span>
+                                        </ConfirmModal>
+                                        <ConfirmModal callback={handleDelete} param={classElement.id}>
+                                            <span className="text-danger m-2">{trash}</span>
+                                        </ConfirmModal>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                 </tbody>
             </table>
         </div>
     );
 }
 
-export default ClassList;
+const mapStateToProps = (state) => {
+    return {
+        listClass: state.classReducer.list,
+    };
+};
+
+export default connect(mapStateToProps)(ClassList);
