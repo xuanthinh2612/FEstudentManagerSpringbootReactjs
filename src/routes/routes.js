@@ -8,6 +8,8 @@ import NewStudentForm from '../components/NewStudentFrom';
 import NewClassForm from '../components/NewClassForm';
 import EditClassForm from '../components/EditClassForm';
 import ClassDetailForm from '../components/ClassDetailForm';
+import LoginForm from '../components/LoginForm';
+import RegistrationForm from '../components/RegistrationForm';
 
 const routes = [
     { path: configs.routes.home, element: Home },
@@ -19,6 +21,8 @@ const routes = [
     { path: configs.routes.newClass, element: NewClassForm },
     { path: configs.routes.editStudent, element: StudentEditForm },
     { path: configs.routes.editClass, element: EditClassForm },
+    { path: configs.routes.login, element: LoginForm },
+    { path: configs.routes.registration, element: RegistrationForm },
 ];
 
 export default routes;

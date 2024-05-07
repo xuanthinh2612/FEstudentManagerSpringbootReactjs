@@ -27,6 +27,16 @@ function Navbar() {
                                 {school}
                             </NavLink>
                         </li>
+                        <li className="nav-item mx-5">
+                            <NavLink to={configs.routes.login} className="nav-link">
+                                Login
+                            </NavLink>
+                        </li>
+                        <li className="nav-item mx-5">
+                            <NavLink to={configs.routes.registration} className="nav-link">
+                                Regiter
+                            </NavLink>
+                        </li>
                     </ul>
                     <form className="d-flex">
                         <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />

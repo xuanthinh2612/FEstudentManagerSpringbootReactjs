@@ -8,6 +8,8 @@ const routes = {
     newClass: '/new-class',
     editStudent: '/edit-student/:id',
     editClass: '/edit-class/:id',
+    login: '/login',
+    registration: '/registration',
 };
 
 export default routes;
