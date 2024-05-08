@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login, storeToken, saveLoggedInUser } from '../service/authService';
 import configs from '../configs';
-// , saveLoggedInUser, storeToken
-// import { useNavigate } from 'react-router-dom';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
@@ -12,18 +10,14 @@ function LoginForm() {
 
     async function handleLoginForm(e) {
         e.preventDefault();
-
         try {
             const response = await login(username, password);
-            console.log(response);
-
-            const token = 'Bearer ' + response.accessToken;
-            storeToken(token);
-
-            saveLoggedInUser(username);
-            navigate(configs.routes.home);
-
-            //     window.location.reload(false);
+            if (response) {
+                const token = 'Bearer ' + response.accessToken;
+                storeToken(token);
+                saveLoggedInUser(username);
+                navigate(configs.routes.home);
+            }
         } catch (error) {
             console.error(error);
         }

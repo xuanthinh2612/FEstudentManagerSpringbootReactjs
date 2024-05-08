@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { registerAPICall } from '../service/authService';
+import configs from '../configs';
 
 function RegistrationForm() {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
-    function handleRegistrationForm(e) {
+    const handleRegistrationForm = async (e) => {
         e.preventDefault();
 
-        // const register = {name, username, email, password}
-
-        // console.log(register);
-
-        // registerAPICall(register).then((response) => {
-        //     console.log(response.data);
-        // }).catch(error => {
-        //     console.error(error);
-        // })
-    }
+        const registerObj = { name, username, email, password };
+        await registerAPICall(registerObj);
+        navigate(configs.routes.login);
+    };
 
     return (
         <div className="container">

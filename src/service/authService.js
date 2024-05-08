@@ -1,6 +1,7 @@
 import * as httpRequest from '../utils/httpRequest';
 
 export const login = async (usernameOrEmail, password) => {
+    cleanUpSessionAndStorageData();
     try {
         const res = await httpRequest.post('/api/auth/login', { usernameOrEmail, password });
         return res;
@@ -9,7 +10,8 @@ export const login = async (usernameOrEmail, password) => {
     }
 };
 
-export const register = async (registerParamObj) => {
+export const registerAPICall = async (registerParamObj) => {
+    cleanUpSessionAndStorageData();
     try {
         const res = await httpRequest.post('/api/auth/register', registerParamObj);
         return res;
@@ -39,7 +41,7 @@ export const getLoggedInUser = () => {
     return username;
 };
 
-export const logout = () => {
+export const cleanUpSessionAndStorageData = () => {
     localStorage.clear();
     sessionStorage.clear();
 };

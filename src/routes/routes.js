@@ -12,7 +12,7 @@ import LoginForm from '../components/LoginForm';
 import RegistrationForm from '../components/RegistrationForm';
 
 const routes = [
-    { path: configs.routes.home, element: Home },
+    { path: configs.routes.home, element: Home, notRequireAuth: true },
     { path: configs.routes.studentList, element: StudentList },
     { path: configs.routes.classList, element: ClassList },
     { path: configs.routes.classDetail, element: ClassDetailForm },
@@ -21,8 +21,8 @@ const routes = [
     { path: configs.routes.newClass, element: NewClassForm },
     { path: configs.routes.editStudent, element: StudentEditForm },
     { path: configs.routes.editClass, element: EditClassForm },
-    { path: configs.routes.login, element: LoginForm },
-    { path: configs.routes.registration, element: RegistrationForm },
+    { path: configs.routes.login, element: LoginForm, notRequireAuth: true },
+    { path: configs.routes.registration, element: RegistrationForm, notRequireAuth: true },
 ];
 
 export default routes;
