@@ -18,7 +18,6 @@ function App() {
             <Routes>
                 {routes.map((route, index) => {
                     const Page = route.element;
-                    console.log(route.requireAuth);
                     return (
                         <Route
                             key={index}

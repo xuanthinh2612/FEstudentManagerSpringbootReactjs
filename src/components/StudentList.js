@@ -6,6 +6,7 @@ import ConfirmModal from './ConfirmModal';
 import store from '../store';
 import { getListStudentAction, deleteStudentByIdAction } from '../actions/studentActions';
 import { connect } from 'react-redux';
+import { isAdminUser } from '../service/authService';
 
 function StudentList(props) {
     const navigate = useNavigate();
@@ -22,16 +23,20 @@ function StudentList(props) {
         await store.dispatch(deleteStudentByIdAction(studentId));
     };
 
+    const isAdmin = isAdminUser();
+
     return (
         <div className="container">
             <div className="d-flex">
                 <h1 className="mt-5">Student List</h1>
             </div>
-            <div className="d-flex justify-content-end">
-                <Link to={configs.routes.newStudent} className="btn btn-outline-dark">
-                    New <span>{plus}</span>
-                </Link>
-            </div>
+            {isAdmin && (
+                <div className="d-flex justify-content-end">
+                    <Link to={configs.routes.newStudent} className="btn btn-outline-dark">
+                        New <span>{plus}</span>
+                    </Link>
+                </div>
+            )}
             <table className="table mt-4">
                 <thead>
                     <tr>
@@ -41,7 +46,7 @@ function StudentList(props) {
                         <th scope="col">Age</th>
                         <th scope="col">Address</th>
                         <th scope="col">Grade</th>
-                        <th></th>
+                        {isAdmin && <th></th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -61,14 +66,16 @@ function StudentList(props) {
                                         <td>{student.age}</td>
                                         <td>{student.address}</td>
                                         <td>{student.schoolClass && student.schoolClass.name}</td>
-                                        <td>
-                                            <ConfirmModal callback={handleEdit} param={student.id}>
-                                                <span className="text-success m-2">{pencel}</span>
-                                            </ConfirmModal>
-                                            <ConfirmModal callback={handleDelete} param={student.id}>
-                                                <span className="text-danger m-2">{trash}</span>
-                                            </ConfirmModal>
-                                        </td>
+                                        {isAdmin && (
+                                            <td>
+                                                <ConfirmModal callback={handleEdit} param={student.id}>
+                                                    <span className="text-success m-2">{pencel}</span>
+                                                </ConfirmModal>
+                                                <ConfirmModal callback={handleDelete} param={student.id}>
+                                                    <span className="text-danger m-2">{trash}</span>
+                                                </ConfirmModal>
+                                            </td>
+                                        )}
                                     </tr>
                                 );
                             })}

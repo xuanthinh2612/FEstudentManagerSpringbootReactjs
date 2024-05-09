@@ -8,9 +8,11 @@ import ConfirmModal from './ConfirmModal';
 import store from '../store';
 import { deleteClassAction, getListClassAction } from '../actions/classActions';
 import { connect } from 'react-redux';
+import { isAdminUser } from '../service/authService';
 
 function ClassList(props) {
     const navigate = useNavigate();
+    const isAdmin = isAdminUser();
 
     useEffect(() => {
         store.dispatch(getListClassAction());
@@ -29,11 +31,13 @@ function ClassList(props) {
             <div className="text-center">
                 <h1 className="mt-5 ">Class List</h1>
             </div>
-            <div className="d-flex justify-content-end">
-                <Link to={configs.routes.newClass} className="btn btn-outline-dark">
-                    New <span>{plus}</span>
-                </Link>
-            </div>
+            {isAdmin && (
+                <div className="d-flex justify-content-end">
+                    <Link to={configs.routes.newClass} className="btn btn-outline-dark">
+                        New <span>{plus}</span>
+                    </Link>
+                </div>
+            )}
 
             <table className="table mt-4">
                 <thead>
@@ -41,7 +45,7 @@ function ClassList(props) {
                         <th scope="col">ID</th>
                         <th scope="col">Name</th>
                         <th scope="col">Description</th>
-                        <th></th>
+                        {isAdmin && <th></th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -56,14 +60,16 @@ function ClassList(props) {
                                         </Link>{' '}
                                     </td>
                                     <td>{classElement.description}</td>
-                                    <td>
-                                        <ConfirmModal callback={handleEdit} param={classElement.id}>
-                                            <span className="text-success m-2">{pencel}</span>
-                                        </ConfirmModal>
-                                        <ConfirmModal callback={handleDelete} param={classElement.id}>
-                                            <span className="text-danger m-2">{trash}</span>
-                                        </ConfirmModal>
-                                    </td>
+                                    {isAdmin && (
+                                        <td>
+                                            <ConfirmModal callback={handleEdit} param={classElement.id}>
+                                                <span className="text-success m-2">{pencel}</span>
+                                            </ConfirmModal>
+                                            <ConfirmModal callback={handleDelete} param={classElement.id}>
+                                                <span className="text-danger m-2">{trash}</span>
+                                            </ConfirmModal>
+                                        </td>
+                                    )}
                                 </tr>
                             );
                         })}

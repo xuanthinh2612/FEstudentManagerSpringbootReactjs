@@ -14,8 +14,9 @@ function LoginForm() {
             const response = await login(username, password);
             if (response) {
                 const token = 'Bearer ' + response.accessToken;
+                const role = response.role;
                 storeToken(token);
-                saveLoggedInUser(username);
+                saveLoggedInUser(username, role);
                 navigate(configs.routes.home);
             }
         } catch (error) {

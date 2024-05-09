@@ -8,11 +8,12 @@ import configs from '../configs';
 import store from '../store';
 import { getDetailStudentAction, deleteStudentByIdAction } from '../actions/studentActions';
 import { connect } from 'react-redux';
-// import { getListStudentAction } from '../actions/studentActions';
+import { isAdminUser } from '../service/authService';
 
 function StudentDetail(props) {
     const navigate = useNavigate();
     const { id } = useParams();
+    const isAdmin = isAdminUser();
 
     useEffect(() => {
         store.dispatch(getDetailStudentAction(id));
@@ -30,9 +31,11 @@ function StudentDetail(props) {
             <div className="d-flex">
                 <h1 className="mt-5">Student Detail</h1>
             </div>
-            <div className="d-flex justify-content-end">
-                <button className="btn btn-outline-success">New</button>
-            </div>
+            {isAdmin && (
+                <div className="d-flex justify-content-end">
+                    <button className="btn btn-outline-success">New</button>
+                </div>
+            )}
             <table className="table mt-4">
                 <thead>
                     <tr>
@@ -42,7 +45,7 @@ function StudentDetail(props) {
                         <th scope="col">Age</th>
                         <th scope="col">Address</th>
                         <th scope="col">Grade</th>
-                        <th scope="col"></th>
+                        {isAdmin && <th scope="col"></th>}
                     </tr>
                 </thead>
                 <tbody>
@@ -57,14 +60,16 @@ function StudentDetail(props) {
                             <td>{props.student.age}</td>
                             <td>{props.student.address}</td>
                             <td>{props.student.schoolClass && props.student.schoolClass.name}</td>
-                            <td>
-                                <ConfirmModal callback={handleEdit} param={props.student.id}>
-                                    <span className="text-success m-2">{pencel}</span>
-                                </ConfirmModal>
-                                <ConfirmModal callback={handleDelete} param={props.student.id}>
-                                    <span className="text-danger m-2">{trash}</span>
-                                </ConfirmModal>
-                            </td>
+                            {isAdmin && (
+                                <td>
+                                    <ConfirmModal callback={handleEdit} param={props.student.id}>
+                                        <span className="text-success m-2">{pencel}</span>
+                                    </ConfirmModal>
+                                    <ConfirmModal callback={handleDelete} param={props.student.id}>
+                                        <span className="text-danger m-2">{trash}</span>
+                                    </ConfirmModal>
+                                </td>
+                            )}
                         </tr>
                     ) : (
                         <tr className="text-center">
