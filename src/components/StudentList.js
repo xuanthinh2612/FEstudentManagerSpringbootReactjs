@@ -4,7 +4,12 @@ import { pencel, trash, plus } from '../assets/icons';
 import configs from '../configs';
 import ConfirmModal from './ConfirmModal';
 import store from '../store';
-import { getListStudentAction, deleteStudentByIdAction, setLoadingStatusAction } from '../actions/studentActions';
+import {
+    getListStudentAction,
+    deleteStudentByIdAction,
+    setLoadingStatusAction,
+    resetStoreAction,
+} from '../actions/studentActions';
 import { connect } from 'react-redux';
 import { cleanUpSessionAndStorageData, isAdminUser } from '../service/authService';
 import SpinnerIcon from './SpinnerIcon';
@@ -30,6 +35,7 @@ function StudentList(props) {
         const statusCode = props.error.response.status;
         if (statusCode === 401 || statusCode === 403) {
             cleanUpSessionAndStorageData();
+            store.dispatch(resetStoreAction());
             navigate(configs.routes.login);
         }
         return (

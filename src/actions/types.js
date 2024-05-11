@@ -13,3 +13,4 @@ export const GET_LIST_CLASS = 'GET_LIST_CLASS';
 export const LOADING = 'LOADING';
 export const FETCH_DATA_SUCCESS = 'FETCH_DATA_SUCCESS';
 export const FETCH_DATA_FAILURE = 'FETCH_DATA_FAILURE';
+export const RESET_STORE = 'RESET_STORE';

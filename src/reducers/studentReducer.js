@@ -6,6 +6,7 @@ import {
     GET_LIST_STUDENT,
     LOADING,
     FETCH_DATA_FAILURE,
+    RESET_STORE,
 } from '../actions/types';
 
 const initStudentStatate = { list: [], item: {}, isLoading: false, error: null };
@@ -61,6 +62,10 @@ function studentReducer(studentState = initStudentStatate, action) {
             return {
                 ...studentState,
                 isLoading: true,
+            };
+        case RESET_STORE:
+            return {
+                ...initStudentStatate,
             };
         case FETCH_DATA_FAILURE:
             return { isLoading: false, error: payload };

@@ -6,6 +6,7 @@ import {
     DETAIL_STUDENTS,
     LOADING,
     FETCH_DATA_FAILURE,
+    RESET_STORE,
 } from './types';
 import * as studentService from '../service/studentService';
 
@@ -88,5 +89,12 @@ export const fetchDataFailureAction = (error) => async (dispatch) => {
     dispatch({
         type: FETCH_DATA_FAILURE,
         payload: error,
+    });
+};
+
+export const resetStoreAction = () => async (dispatch) => {
+    dispatch({
+        type: RESET_STORE,
+        payload: null,
     });
 };
