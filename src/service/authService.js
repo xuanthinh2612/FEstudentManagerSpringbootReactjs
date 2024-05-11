@@ -10,6 +10,21 @@ export const login = async (usernameOrEmail, password) => {
     }
 };
 
+export const loginBySNS = async ({ name, provider, photoUrl, usernameOrEmail }) => {
+    cleanUpSessionAndStorageData();
+    try {
+        const res = await httpRequest.post('/api/auth/loginBySNS', {
+            name,
+            provider,
+            photoUrl,
+            usernameOrEmail,
+        });
+        return res;
+    } catch (error) {
+        console.log('login errors!');
+    }
+};
+
 export const registerAPICall = async (registerParamObj) => {
     cleanUpSessionAndStorageData();
     try {

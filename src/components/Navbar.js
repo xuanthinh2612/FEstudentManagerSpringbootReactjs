@@ -40,11 +40,6 @@ function Navbar() {
                                         Login
                                     </NavLink>
                                 </li>
-                                <li className="nav-item mx-5">
-                                    <NavLink to={configs.routes.registration} className="nav-link">
-                                        Regiter
-                                    </NavLink>
-                                </li>
                             </>
                         )}
                         {isAuth && (

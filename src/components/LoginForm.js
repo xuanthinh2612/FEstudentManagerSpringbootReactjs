@@ -1,12 +1,93 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { login, storeToken, saveLoggedInUser } from '../service/authService';
+import React, { useEffect, useState } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { login, storeToken, saveLoggedInUser, loginBySNS } from '../service/authService';
 import configs from '../configs';
+
+import firebase from 'firebase/compat/app';
+import * as firebaseui from 'firebaseui';
+import 'firebaseui/dist/firebaseui.css'; // Import FirebaseUI CSS
+import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { initializeApp } from 'firebase/app';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
+
+    // for example only
+    useEffect(() => {
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: process.env.REACT_APP_API_KEY,
+            authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        // Initialize FirebaseUI
+        const uiConfig = {
+            signInSuccessUrl: false, // URL to redirect to after sign-in.
+            signInOptions: [
+                // List of authentication providers.
+                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+                firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+                // Add more providers as needed.
+            ],
+        };
+        const ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+        // Render FirebaseUI widget
+        ui.start('#firebaseui-auth-container', uiConfig);
+
+        // Clean up on unmount
+        return () => {
+            ui.delete();
+        };
+    }, []);
+    //
+    //
+
+    const signInWithGoogle = async () => {
+        const firebaseConfig = {
+            apiKey: process.env.REACT_APP_API_KEY,
+            authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        try {
+            const result = await signInWithPopup(auth, provider);
+            // // This gives you a Google Access Token. You can use it to access the Google API.
+            const credential = GoogleAuthProvider.credentialFromResult(result);
+            const token = credential.accessToken;
+            // // The signed-in user info.
+            const user = result.user;
+            const userDto = {
+                name: user.displayName,
+                provider: result.providerId,
+                photoUrl: user.photoURL,
+                usernameOrEmail: user.email,
+            };
+
+            const response = await loginBySNS(userDto);
+            if (response) {
+                const token = 'Bearer ' + response.accessToken;
+                const role = response.role;
+                storeToken(token);
+                saveLoggedInUser(username, role);
+                navigate(configs.routes.home);
+            }
+        } catch (error) {
+            // handle if error occur.
+            console.log(error);
+        }
+    };
 
     async function handleLoginForm(e) {
         e.preventDefault();
@@ -49,7 +130,6 @@ function LoginForm() {
                                         ></input>
                                     </div>
                                 </div>
-
                                 <div className="row mb-3">
                                     <label className="col-md-3 control-label"> Password </label>
                                     <div className="col-md-9">
@@ -63,11 +143,21 @@ function LoginForm() {
                                         ></input>
                                     </div>
                                 </div>
-
                                 <div className="form-group mb-3">
                                     <button className="btn btn-primary" onClick={(e) => handleLoginForm(e)}>
                                         Login
                                     </button>
+                                </div>
+                                <div className="form-group mb-3">
+                                    <button type="button" className="btn btn-primary" onClick={signInWithGoogle}>
+                                        Login with Google
+                                    </button>
+                                </div>
+                                <div id="firebaseui-auth-container"></div>
+                                <div className="form-group mb-3">
+                                    <Link to={configs.routes.registration} className="text-decoration-none">
+                                        Do not have account? Regiter Now!
+                                    </Link>
                                 </div>
                             </form>
                         </div>

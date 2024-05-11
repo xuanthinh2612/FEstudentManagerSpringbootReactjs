@@ -11,6 +11,8 @@
         "bootstrap": "^5.3.3",
         "classnames": "^2.5.1",
         "customize-cra": "^1.0.0",
+        "firebase": "^10.11.1",
+        "firebaseui": "^6.1.0",
         "react": "^18.2.0",
         "react-app-rewired": "^2.2.1",
         "react-bootstrap": "^2.10.2",
