@@ -6,7 +6,7 @@ import configs from '../configs';
 import firebase from 'firebase/compat/app';
 import * as firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css'; // Import FirebaseUI CSS
-import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 
 function LoginForm() {
@@ -14,7 +14,7 @@ function LoginForm() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    // for example only
+    // for example only using firebaseui
     useEffect(() => {
         // Initialize Firebase
         const firebaseConfig = {
@@ -28,6 +28,7 @@ function LoginForm() {
 
         // Initialize FirebaseUI
         const uiConfig = {
+            signInFlow: 'popup',
             signInSuccessUrl: false, // URL to redirect to after sign-in.
             signInOptions: [
                 // List of authentication providers.
@@ -36,9 +37,31 @@ function LoginForm() {
                 firebase.auth.TwitterAuthProvider.PROVIDER_ID,
                 // Add more providers as needed.
             ],
-        };
-        const ui = new firebaseui.auth.AuthUI(firebase.auth());
+            callbacks: {
+                // Avoid redirects after sign-in.
+                signInSuccessWithAuthResult: async (result) => {
+                    const userInfo = result.user.providerData[0];
 
+                    const userDto = {
+                        name: userInfo.displayName,
+                        provider: userInfo.providerId,
+                        photoUrl: userInfo.photoURL,
+                        usernameOrEmail: userInfo.email,
+                    };
+
+                    const response = await loginBySNS(userDto);
+                    if (response) {
+                        const token = 'Bearer ' + response.accessToken;
+                        const role = response.role;
+                        storeToken(token);
+                        saveLoggedInUser(username, role);
+                        navigate(configs.routes.home);
+                    }
+                },
+            },
+        };
+
+        const ui = new firebaseui.auth.AuthUI(firebase.auth());
         // Render FirebaseUI widget
         ui.start('#firebaseui-auth-container', uiConfig);
 
@@ -50,6 +73,7 @@ function LoginForm() {
     //
     //
 
+    // signin with popup
     const signInWithGoogle = async () => {
         const firebaseConfig = {
             apiKey: process.env.REACT_APP_API_KEY,
@@ -67,10 +91,10 @@ function LoginForm() {
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
             // // The signed-in user info.
-            const user = result.user;
+            const user = result.user.providerData[0];
             const userDto = {
                 name: user.displayName,
-                provider: result.providerId,
+                provider: user.providerId,
                 photoUrl: user.photoURL,
                 usernameOrEmail: user.email,
             };
