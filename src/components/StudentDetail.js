@@ -6,9 +6,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import ConfirmModal from './ConfirmModal';
 import configs from '../configs';
 import store from '../store';
-import { getDetailStudentAction, deleteStudentByIdAction } from '../actions/studentActions';
+import { getDetailStudentAction, deleteStudentByIdAction, setLoadingStatusAction } from '../actions/studentActions';
 import { connect } from 'react-redux';
 import { isAdminUser } from '../service/authService';
+import SpinnerIcon from './SpinnerIcon';
 
 function StudentDetail(props) {
     const navigate = useNavigate();
@@ -16,6 +17,7 @@ function StudentDetail(props) {
     const isAdmin = isAdminUser();
 
     useEffect(() => {
+        store.dispatch(setLoadingStatusAction(true));
         store.dispatch(getDetailStudentAction(id));
     }, [id]);
 
@@ -29,7 +31,7 @@ function StudentDetail(props) {
     return (
         <div className="container">
             <div className="d-flex">
-                <h1 className="mt-5">Student Detail</h1>
+                <h1 className="mt-5">Student Detail {props.isLoading && SpinnerIcon}</h1>
             </div>
             {isAdmin && (
                 <div className="d-flex justify-content-end">
@@ -85,6 +87,7 @@ function StudentDetail(props) {
 const mapStateToProps = (state) => {
     return {
         student: state.studentReducer.item,
+        isLoading: state.studentReducer.isLoading,
     };
 };
 

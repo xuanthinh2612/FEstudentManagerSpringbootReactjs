@@ -215,6 +215,7 @@ function StudentEditForm() {
 const mapStateToProps = (state) => {
     return {
         studentState: state.studentReducer.item,
+        isLoading: state.studentReducer.isLoading,
     };
 };
 

@@ -1,4 +1,4 @@
-import { CREATE_STUDENT, GET_LIST_STUDENT, UPDATE_STUDENT, DELETE_STUDENT, DETAIL_STUDENTS } from './types';
+import { CREATE_STUDENT, GET_LIST_STUDENT, UPDATE_STUDENT, DELETE_STUDENT, DETAIL_STUDENTS, LOADING } from './types';
 import * as studentService from '../service/studentService';
 
 export const createStudentAction = (studentPayload) => async (dispatch) => {
@@ -43,5 +43,12 @@ export const deleteStudentByIdAction = (id) => async (dispatch) => {
     dispatch({
         type: DELETE_STUDENT,
         payload: id,
+    });
+};
+
+export const setLoadingStatusAction = (status) => async (dispatch) => {
+    dispatch({
+        type: LOADING,
+        payload: status,
     });
 };

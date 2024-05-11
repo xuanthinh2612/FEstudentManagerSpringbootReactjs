@@ -6,15 +6,17 @@ import configs from '../configs';
 import { pencel, plus, trash } from '../assets/icons';
 import ConfirmModal from './ConfirmModal';
 import store from '../store';
-import { deleteClassAction, getListClassAction } from '../actions/classActions';
+import { deleteClassAction, getListClassAction, setLoadingStatusAction } from '../actions/classActions';
 import { connect } from 'react-redux';
 import { isAdminUser } from '../service/authService';
+import SpinnerIcon from './SpinnerIcon';
 
 function ClassList(props) {
     const navigate = useNavigate();
     const isAdmin = isAdminUser();
 
     useEffect(() => {
+        store.dispatch(setLoadingStatusAction(true));
         store.dispatch(getListClassAction());
     }, []);
 
@@ -29,7 +31,7 @@ function ClassList(props) {
     return (
         <div className="container">
             <div className="text-center">
-                <h1 className="mt-5 ">Class List</h1>
+                <h1 className="mt-5 ">Class List {props.isLoading && SpinnerIcon}</h1>
             </div>
             {isAdmin && (
                 <div className="d-flex justify-content-end">
@@ -82,6 +84,7 @@ function ClassList(props) {
 const mapStateToProps = (state) => {
     return {
         listClass: state.classReducer.list,
+        isLoading: state.classReducer.isLoading,
     };
 };
 

@@ -1,20 +1,22 @@
 import { useEffect } from 'react';
 import store from '../store';
-import { getDetailClassAction } from '../actions/classActions';
+import { getDetailClassAction, setLoadingStatusAction } from '../actions/classActions';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
+import SpinnerIcon from './SpinnerIcon';
 
 function ClassDetailForm(props) {
     const { id } = useParams();
 
     useEffect(() => {
+        store.dispatch(setLoadingStatusAction(true));
         store.dispatch(getDetailClassAction(id));
     }, []);
 
     return (
         <div className="container">
             <div className="text-center">
-                <h1 className="mt-5 ">Class Detail</h1>
+                <h1 className="mt-5 ">Class Detail {props.isLoading && SpinnerIcon}</h1>
             </div>
             <table className="table mt-4">
                 <thead>
@@ -41,6 +43,7 @@ function ClassDetailForm(props) {
 const mapStateToProps = (state) => {
     return {
         classDetail: state.classReducer.item,
+        isLoading: state.classReducer.isLoading,
     };
 };
 export default connect(mapStateToProps)(ClassDetailForm);

@@ -9,3 +9,5 @@ export const DETAIL_CLASS = 'DETAIL_CLASS';
 export const UPDATE_CLASS = 'UPDATE_CLASS';
 export const DELETE_CLASS = 'DELETE_CLASS';
 export const GET_LIST_CLASS = 'GET_LIST_CLASS';
+
+export const LOADING = 'LOADING';

@@ -1,5 +1,5 @@
 import * as classService from '../service/classService';
-import { CREATE_CLASS, DELETE_CLASS, GET_LIST_CLASS, DETAIL_CLASS, UPDATE_CLASS } from '../actions/types';
+import { CREATE_CLASS, DELETE_CLASS, GET_LIST_CLASS, DETAIL_CLASS, UPDATE_CLASS, LOADING } from '../actions/types';
 
 export const createClassAction = (classPayload) => async (dispatch) => {
     const res = await classService.createClass(classPayload);
@@ -42,5 +42,11 @@ export const deleteClassAction = (classId) => async (dispatch) => {
     dispatch({
         type: DELETE_CLASS,
         payload: classId,
+    });
+};
+export const setLoadingStatusAction = (status) => async (dispatch) => {
+    dispatch({
+        type: LOADING,
+        payload: status,
     });
 };

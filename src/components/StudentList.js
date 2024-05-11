@@ -4,14 +4,16 @@ import { pencel, trash, plus } from '../assets/icons';
 import configs from '../configs';
 import ConfirmModal from './ConfirmModal';
 import store from '../store';
-import { getListStudentAction, deleteStudentByIdAction } from '../actions/studentActions';
+import { getListStudentAction, deleteStudentByIdAction, setLoadingStatusAction } from '../actions/studentActions';
 import { connect } from 'react-redux';
 import { isAdminUser } from '../service/authService';
+import SpinnerIcon from './SpinnerIcon';
 
 function StudentList(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
+        store.dispatch(setLoadingStatusAction(true));
         store.dispatch(getListStudentAction());
     }, []);
 
@@ -28,7 +30,7 @@ function StudentList(props) {
     return (
         <div className="container">
             <div className="d-flex">
-                <h1 className="mt-5">Student List</h1>
+                <h1 className="mt-5">Student List {props.isLoading && SpinnerIcon} </h1>
             </div>
             {isAdmin && (
                 <div className="d-flex justify-content-end">
@@ -94,6 +96,7 @@ function StudentList(props) {
 const mapStateToProps = (state) => {
     return {
         listStudent: state.studentReducer.list,
+        isLoading: state.studentReducer.isLoading,
     };
 };
 

@@ -1,4 +1,4 @@
-import { CREATE_CLASS, DELETE_CLASS, GET_LIST_CLASS, DETAIL_CLASS, UPDATE_CLASS } from '../actions/types';
+import { CREATE_CLASS, DELETE_CLASS, GET_LIST_CLASS, DETAIL_CLASS, UPDATE_CLASS, LOADING } from '../actions/types';
 
 const initClassStatate = { list: [], item: {}, isLoading: false };
 
@@ -8,7 +8,7 @@ function classReducer(classState = initClassStatate, action) {
     switch (type) {
         case CREATE_CLASS:
             classState.list.push(payload);
-            return { ...classState, item: payload };
+            return { ...classState, item: payload, isLoading: false };
         case UPDATE_CLASS:
             let updatedList;
 
@@ -24,18 +24,23 @@ function classReducer(classState = initClassStatate, action) {
                 ...classState,
                 list: updatedList,
                 item: payload,
+                isLoading: false,
             };
 
         case GET_LIST_CLASS:
-            return { ...classState, list: payload };
+            return { ...classState, list: payload, isLoading: false };
         case DETAIL_CLASS:
-            return { ...classState, item: payload };
+            return { ...classState, item: payload, isLoading: false };
         case DELETE_CLASS:
             const updatedClassList = classState.list.filter((e) => e.id !== payload);
-            return { ...classState, list: updatedClassList, item: null };
-
+            return { ...classState, list: updatedClassList, item: null, isLoading: false };
+        case LOADING:
+            return {
+                ...classState,
+                isLoading: true,
+            };
         default:
-            return classState;
+            return { ...classState, isLoading: false };
     }
 }
 

@@ -1,4 +1,11 @@
-import { CREATE_STUDENT, DETAIL_STUDENTS, UPDATE_STUDENT, DELETE_STUDENT, GET_LIST_STUDENT } from '../actions/types';
+import {
+    CREATE_STUDENT,
+    DETAIL_STUDENTS,
+    UPDATE_STUDENT,
+    DELETE_STUDENT,
+    GET_LIST_STUDENT,
+    LOADING,
+} from '../actions/types';
 
 const initStudentStatate = { list: [], item: {}, isLoading: false };
 
@@ -12,6 +19,7 @@ function studentReducer(studentState = initStudentStatate, action) {
             return {
                 ...studentState,
                 item: payload,
+                isLoading: false,
             };
         case UPDATE_STUDENT:
             let updatedList;
@@ -28,14 +36,16 @@ function studentReducer(studentState = initStudentStatate, action) {
                 ...studentState,
                 list: updatedList,
                 item: payload,
+                isLoading: false,
             };
 
         case GET_LIST_STUDENT:
-            return { ...studentState, list: payload };
+            return { ...studentState, list: payload, isLoading: false };
         case DETAIL_STUDENTS:
             return {
                 ...studentState,
                 item: payload,
+                isLoading: false,
             };
         case DELETE_STUDENT:
             const subList = studentState.list.filter((item) => item.id !== payload);
@@ -44,10 +54,15 @@ function studentReducer(studentState = initStudentStatate, action) {
                 ...studentState,
                 list: subList,
                 item: null,
+                isLoading: false,
             };
-
+        case LOADING:
+            return {
+                ...studentState,
+                isLoading: true,
+            };
         default:
-            return studentState;
+            return { ...studentState, isLoading: false };
     }
 }
 
