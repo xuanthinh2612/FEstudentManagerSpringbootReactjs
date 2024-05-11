@@ -6,14 +6,13 @@ import ConfirmModal from './ConfirmModal';
 import store from '../store';
 import { getListStudentAction, deleteStudentByIdAction, setLoadingStatusAction } from '../actions/studentActions';
 import { connect } from 'react-redux';
-import { isAdminUser } from '../service/authService';
+import { cleanUpSessionAndStorageData, isAdminUser } from '../service/authService';
 import SpinnerIcon from './SpinnerIcon';
 
 function StudentList(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        store.dispatch(setLoadingStatusAction(true));
         store.dispatch(getListStudentAction());
     }, []);
 
@@ -27,10 +26,30 @@ function StudentList(props) {
 
     const isAdmin = isAdminUser();
 
+    if (props.error) {
+        const statusCode = props.error.response.status;
+        if (statusCode === 401 || statusCode === 403) {
+            cleanUpSessionAndStorageData();
+            navigate(configs.routes.login);
+        }
+        return (
+            <div>
+                Opp! Some error Occured with status: {props.error.response.status} - {props.error.message}
+            </div>
+        );
+    }
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="text-center">{SpinnerIcon}</div>
+            </div>
+        );
+    }
+
     return (
         <div className="container">
             <div className="d-flex">
-                <h1 className="mt-5">Student List {props.isLoading && SpinnerIcon} </h1>
+                <h1 className="mt-5">Student List</h1>
             </div>
             {isAdmin && (
                 <div className="d-flex justify-content-end">
@@ -97,6 +116,7 @@ const mapStateToProps = (state) => {
     return {
         listStudent: state.studentReducer.list,
         isLoading: state.studentReducer.isLoading,
+        error: state.studentReducer.error,
     };
 };
 

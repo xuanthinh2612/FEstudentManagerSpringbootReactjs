@@ -17,7 +17,6 @@ function StudentDetail(props) {
     const isAdmin = isAdminUser();
 
     useEffect(() => {
-        store.dispatch(setLoadingStatusAction(true));
         store.dispatch(getDetailStudentAction(id));
     }, [id]);
 
@@ -27,11 +26,25 @@ function StudentDetail(props) {
     const handleDelete = async (studentId) => {
         await store.dispatch(deleteStudentByIdAction(studentId));
     };
+    if (props.error) {
+        return (
+            <div>
+                Opp! Some error Occured with status: {props.error.response.status} - {props.error.message}
+            </div>
+        );
+    }
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="text-center">{SpinnerIcon}</div>
+            </div>
+        );
+    }
 
     return (
         <div className="container">
             <div className="d-flex">
-                <h1 className="mt-5">Student Detail {props.isLoading && SpinnerIcon}</h1>
+                <h1 className="mt-5">Student Detail</h1>
             </div>
             {isAdmin && (
                 <div className="d-flex justify-content-end">
@@ -88,6 +101,7 @@ const mapStateToProps = (state) => {
     return {
         student: state.studentReducer.item,
         isLoading: state.studentReducer.isLoading,
+        error: state.studentReducer.error,
     };
 };
 

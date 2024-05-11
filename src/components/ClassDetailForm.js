@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import store from '../store';
-import { getDetailClassAction, setLoadingStatusAction } from '../actions/classActions';
+import { getDetailClassAction } from '../actions/classActions';
 import { useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import SpinnerIcon from './SpinnerIcon';
@@ -9,14 +9,27 @@ function ClassDetailForm(props) {
     const { id } = useParams();
 
     useEffect(() => {
-        store.dispatch(setLoadingStatusAction(true));
         store.dispatch(getDetailClassAction(id));
     }, []);
 
+    if (props.error) {
+        return (
+            <div>
+                Opp! Some error Occured with status: {props.error.response.status} - {props.error.message}
+            </div>
+        );
+    }
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="text-center">{SpinnerIcon}</div>
+            </div>
+        );
+    }
     return (
         <div className="container">
             <div className="text-center">
-                <h1 className="mt-5 ">Class Detail {props.isLoading && SpinnerIcon}</h1>
+                <h1 className="mt-5 ">Class Detail</h1>
             </div>
             <table className="table mt-4">
                 <thead>
@@ -44,6 +57,7 @@ const mapStateToProps = (state) => {
     return {
         classDetail: state.classReducer.item,
         isLoading: state.classReducer.isLoading,
+        error: state.classReducer.error,
     };
 };
 export default connect(mapStateToProps)(ClassDetailForm);

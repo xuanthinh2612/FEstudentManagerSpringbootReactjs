@@ -5,9 +5,10 @@ import {
     DELETE_STUDENT,
     GET_LIST_STUDENT,
     LOADING,
+    FETCH_DATA_FAILURE,
 } from '../actions/types';
 
-const initStudentStatate = { list: [], item: {}, isLoading: false };
+const initStudentStatate = { list: [], item: {}, isLoading: false, error: null };
 
 function studentReducer(studentState = initStudentStatate, action) {
     const { type, payload } = action;
@@ -61,6 +62,9 @@ function studentReducer(studentState = initStudentStatate, action) {
                 ...studentState,
                 isLoading: true,
             };
+        case FETCH_DATA_FAILURE:
+            return { isLoading: false, error: payload };
+
         default:
             return { ...studentState, isLoading: false };
     }
