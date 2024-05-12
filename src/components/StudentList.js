@@ -19,23 +19,6 @@ function StudentList(props) {
         store.dispatch(getListStudentAction());
     }, []);
 
-    useEffect(() => {
-        // sau khi store được update lỗi, thì xử lý như bên dưới
-        if (props.error) {
-            const statusCode = props.error.response.status;
-            if (statusCode === 401 || statusCode === 403) {
-                // Nếu xảy ra lỗi authentication thì xóa thông tin đăng nhập trong localStorage
-                cleanUpSessionAndStorageData();
-                // sau khi xóa thông tin đăng nhập thì xóa tiếp error trong store
-                // phải gọi dispatch trong useEffect tránh warning render cùng lúc 2 component
-                store.dispatch(resetStoreAction());
-                // chuyển hưởng sang trang login
-                navigate(configs.routes.login);
-            }
-        }
-        // props.error là dependencies khi có error lập tức call callback trong useEffect. navigate do prettier gợi ý để vào làm gì không biết :)))
-    }, [navigate, props.error]);
-
     const handleEdit = (studentId) => {
         navigate(`/edit-student/${studentId}`);
     };

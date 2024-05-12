@@ -1,7 +1,10 @@
+import { resetStoreAction } from '../actions/studentActions';
+import store from '../store';
 import * as httpRequest from '../utils/httpRequest';
 
 export const login = async (usernameOrEmail, password) => {
     cleanUpSessionAndStorageData();
+    store.dispatch(resetStoreAction());
     try {
         const res = await httpRequest.post('/api/auth/login', { usernameOrEmail, password });
         return res;
@@ -12,6 +15,8 @@ export const login = async (usernameOrEmail, password) => {
 
 export const loginBySNS = async ({ name, provider, photoUrl, usernameOrEmail }) => {
     cleanUpSessionAndStorageData();
+    store.dispatch(resetStoreAction());
+
     try {
         const res = await httpRequest.post('/api/auth/loginBySNS', {
             name,

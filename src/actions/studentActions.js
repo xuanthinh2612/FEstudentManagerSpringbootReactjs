@@ -9,6 +9,7 @@ import {
     RESET_STORE,
 } from './types';
 import * as studentService from '../service/studentService';
+import { cleanUpSessionAndStorageData } from '../service/authService';
 
 export const createStudentAction = (studentPayload) => async (dispatch) => {
     dispatch(setLoadingStatusAction());
@@ -86,6 +87,13 @@ export const setLoadingStatusAction = () => async (dispatch) => {
     });
 };
 export const fetchDataFailureAction = (error) => async (dispatch) => {
+    // Nếu xảy ra lỗi authentication thì xóa thông tin đăng nhập trong localStorage
+    if (error) {
+        const statusCode = error.response.status;
+        if (statusCode === 401 || statusCode === 403) {
+            cleanUpSessionAndStorageData();
+        }
+    }
     dispatch({
         type: FETCH_DATA_FAILURE,
         payload: error,
