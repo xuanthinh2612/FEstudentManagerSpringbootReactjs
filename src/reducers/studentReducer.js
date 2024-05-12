@@ -64,9 +64,7 @@ function studentReducer(studentState = initStudentStatate, action) {
                 isLoading: true,
             };
         case RESET_STORE:
-            return {
-                ...initStudentStatate,
-            };
+            return initStudentStatate;
         case FETCH_DATA_FAILURE:
             return { isLoading: false, error: payload };
 

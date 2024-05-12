@@ -61,7 +61,7 @@ function LoginForm() {
             },
         };
 
-        const ui = new firebaseui.auth.AuthUI(firebase.auth());
+        const ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
         // Render FirebaseUI widget
         ui.start('#firebaseui-auth-container', uiConfig);
 
@@ -109,7 +109,7 @@ function LoginForm() {
             }
         } catch (error) {
             // handle if error occur.
-            console.log(error);
+            console.log('signInWithGoogle : ', error);
         }
     };
 
@@ -125,7 +125,7 @@ function LoginForm() {
                 navigate(configs.routes.home);
             }
         } catch (error) {
-            console.error(error);
+            console.error('handleLoginForm: ', error);
         }
     }
 
